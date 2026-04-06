@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Momentum">
+<title>Momentum</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#080808;
+  --card:#101010;
+  --border:#1c1c1c;
+  --text:#e8e8e8;
+  --muted:#555;
+  --dim:#333;
+  --accent:#5ec46a;
+  --accent2:#4dd0e1;
+  --warn:#e8a838;
+  --serif:'DM Serif Display',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;max-width:480px;margin:0 auto;padding-bottom:40px}
+button{cursor:pointer;font-family:var(--sans);border:none;outline:none}
+input{font-family:var(--sans);-webkit-appearance:none;outline:none}
+
+/* HOME */
+.home{padding:0 20px}
+
+.top-bar{padding:24px 20px 0;display:flex;justify-content:space-between;align-items:flex-start}
+.app-name{font-family:var(--serif);font-size:26px;letter-spacing:-.5px;color:#fff}
+.app-tag{font-size:11px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px}
+.day-pill{background:#0f1f0f;border:1px solid #1a3a1a;border-radius:20px;padding:8px 14px;text-align:right}
+.day-num{font-family:var(--serif);font-size:22px;color:var(--accent);line-height:1}
+.day-lbl{font-size:10px;color:#3a7a3a;letter-spacing:1px;text-transform:uppercase}
+
+.hero{padding:32px 0 20px;text-align:center}
+.hero-line{font-family:var(--serif);font-size:28px;line-height:1.2;color:#fff;margin-bottom:8px}
+.hero-sub{font-size:13px;color:var(--muted);line-height:1.7}
+
+.boost-btn{width:100%;background:var(--accent);color:#000;border-radius:16px;padding:20px;font-size:18px;font-weight:700;letter-spacing:-.3px;display:flex;align-items:center;justify-content:center;gap:10px;transition:transform .15s,opacity .15s;margin-bottom:10px}
+.boost-btn:active{transform:scale(.97);opacity:.9}
+.boost-btn .arrow{font-size:22px;transition:transform .2s}
+.boost-btn:active .arrow{transform:translateX(4px)}
+
+.random-btn{width:100%;background:none;border:1px solid var(--border);color:var(--muted);border-radius:12px;padding:14px;font-size:14px;font-weight:600;margin-bottom:20px;transition:border-color .2s,color .2s}
+.random-btn:active{border-color:var(--accent2);color:var(--accent2)}
+
+/* SEARCH */
+.search-wrap{position:relative;margin-bottom:28px}
+.search-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:8px}
+.search-row{display:flex;gap:8px}
+.search-input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;color:var(--text);padding:14px 16px;font-size:15px;transition:border-color .2s}
+.search-input:focus{border-color:var(--accent2)}
+.search-input::placeholder{color:var(--dim)}
+.search-go{background:var(--accent2);color:#000;border-radius:10px;padding:0 18px;font-size:13px;font-weight:700;flex-shrink:0}
+
+/* THEME PILLS */
+.themes{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:28px}
+.tpill{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:8px 14px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s}
+.tpill:active{transform:scale(.95)}
+.tpill.urge{border-color:#3a1a00;color:#e8a838}
+.tpill.gym{border-color:#0a2a0a;color:var(--accent)}
+.tpill.sleep{border-color:#1a1a3a;color:#9b8bff}
+.tpill.anxiety{border-color:#2a0a0a;color:#ff8888}
+.tpill.clarity{border-color:#002a2a;color:var(--accent2)}
+.tpill.skin{border-color:#2a1a00;color:#f4a650}
+.tpill.money{border-color:#0a2a1a;color:#50e4a0}
+.tpill.identity{border-color:#1a001a;color:#d4a0ff}
+
+/* STREAK */
+.streak-area{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:28px}
+.streak-hdr{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px}
+.streak-dots{display:flex;gap:6px}
+.sdot{width:28px;height:28px;border-radius:8px;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .3s}
+.sdot.done{background:#0f1f0f;border:1px solid var(--accent)}
+.sdot.today{background:var(--accent);color:#000;font-weight:800}
+.sdot.empty{opacity:.3}
+.streak-note{font-size:11px;color:var(--muted);margin-top:8px}
+
+/* STORY SCREEN */
+.story-screen{min-height:100vh;display:flex;flex-direction:column;padding:0}
+.story-nav{padding:18px 20px;display:flex;align-items:center;gap:12px}
+.back-btn{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 16px;font-size:13px;font-weight:700;color:var(--muted)}
+.story-count{font-size:12px;color:var(--muted);margin-left:auto}
+
+.story-card{margin:0 16px;background:var(--card);border:1px solid var(--border);border-radius:20px;flex:1;padding:28px 24px;display:flex;flex-direction:column;min-height:400px}
+.theme-tag{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;margin-bottom:20px;align-self:flex-start}
+.tt-urge{background:#1a0e00;color:var(--warn)}
+.tt-gym{background:#0a150a;color:var(--accent)}
+.tt-sleep{background:#0e0e1a;color:#9b8bff}
+.tt-anxiety{background:#1a0a0a;color:#ff8888}
+.tt-clarity{background:#001a1a;color:var(--accent2)}
+.tt-skin{background:#1a1000;color:#f4a650}
+.tt-money{background:#001a0e;color:#50e4a0}
+.tt-identity{background:#0e001a;color:#d4a0ff}
+
+.story-text{font-family:var(--serif);font-size:21px;line-height:1.55;color:#fff;flex:1;margin-bottom:24px}
+.story-text em{font-style:italic;color:#bbb}
+.story-source{font-size:12px;color:var(--muted);margin-bottom:24px;padding-top:16px;border-top:1px solid var(--border)}
+.source-label{color:var(--dim);margin-right:6px}
+
+.story-actions{display:flex;gap:10px;margin:16px}
+.next-btn{flex:1;background:var(--accent);color:#000;border-radius:14px;padding:17px;font-size:16px;font-weight:800}
+.save-btn{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:17px 20px;font-size:18px}
+
+/* SAVED SCREEN */
+.saved-screen{padding:0 20px}
+.saved-hdr{display:flex;justify-content:space-between;align-items:center;padding:20px 0 16px}
+.saved-title{font-family:var(--serif);font-size:22px}
+.saved-back{background:none;color:var(--muted);font-size:13px;font-weight:700}
+.saved-empty{text-align:center;padding:60px 0;color:var(--muted);font-size:14px;line-height:1.8}
+.saved-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px;display:flex;gap:12px;cursor:pointer}
+.si-tag{font-size:16px;flex-shrink:0}
+.si-text{font-size:14px;color:#ccc;line-height:1.5;flex:1;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.si-del{background:none;color:var(--dim);font-size:20px;padding:0 4px;flex-shrink:0;align-self:flex-start}
+
+/* START DATE */
+.date-screen{padding:40px 24px}
+.date-hdr{font-family:var(--serif);font-size:32px;line-height:1.2;margin-bottom:12px}
+.date-sub{font-size:14px;color:var(--muted);margin-bottom:32px;line-height:1.7}
+.date-input{width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;color:var(--text);padding:16px;font-size:18px;margin-bottom:12px}
+.date-btn{width:100%;background:var(--accent);color:#000;border-radius:12px;padding:16px;font-size:16px;font-weight:800}
+.date-skip{width:100%;background:none;color:var(--muted);padding:12px;font-size:14px;margin-top:4px}
+
+/* SETTINGS */
+.settings-area{padding:20px}
+.settings-title{font-size:14px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.settings-row{display:flex;justify-content:space-between;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:8px}
+.sr-label{font-size:14px;color:#ccc}
+.sr-val{font-size:12px;color:var(--muted);font-weight:700}
+.reset-date-btn{background:none;color:#ff6060;font-size:13px;font-weight:700}
+
+.screen{display:none}
+.screen.on{display:block}
+
+/* toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#ddd;padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .3s;white-space:nowrap;border:1px solid #2a2a2a;pointer-events:none}
+</style>
+</head>
+<body>
+
+<div class="screen on" id="screen-home">
+  <div class="top-bar">
+    <div>
+      <div class="app-name">Momentum</div>
+      <div class="app-tag">Keep going</div>
+    </div>
+    <div class="day-pill" id="day-pill" onclick="showScreen('screen-settings')">
+      <div class="day-num" id="day-num">—</div>
+      <div class="day-lbl">days clean</div>
+    </div>
+  </div>
+
+  <div class="home">
+    <div class="hero">
+      <div class="hero-line" id="hero-line">You're stronger<br><em style="font-style:italic;color:#999">than this moment.</em></div>
+      <div class="hero-sub" id="hero-sub">Real stories. Real people. Real proof it's worth it.</div>
+    </div>
+
+    <button class="boost-btn" onclick="showBoost()">
+      <span>I need a boost right now</span>
+      <span class="arrow">→</span>
+    </button>
+    <button class="random-btn" onclick="showRandom()">↻ &nbsp;Random story</button>
+
+    <div class="search-lbl">What's going on right now?</div>
+    <div class="search-row" style="margin-bottom:20px">
+      <input class="search-input" id="search-in" type="text" placeholder="e.g. I'm stressed, can't sleep, gym feels pointless…" onkeydown="if(event.key==='Enter')doSearch()">
+      <button class="search-go" onclick="doSearch()">Find →</button>
+    </div>
+
+    <div class="search-lbl">Browse by theme</div>
+    <div class="themes">
+      <div class="tpill urge" onclick="showTheme('urge')">⚡ Urge resistance</div>
+      <div class="tpill gym" onclick="showTheme('gym')">💪 Gym & gains</div>
+      <div class="tpill sleep" onclick="showTheme('sleep')">🌙 Sleep</div>
+      <div class="tpill anxiety" onclick="showTheme('anxiety')">🧠 Anxiety</div>
+      <div class="tpill clarity" onclick="showTheme('clarity')">✨ Mental clarity</div>
+      <div class="tpill skin" onclick="showTheme('skin')">🪞 Skin</div>
+      <div class="tpill money" onclick="showTheme('money')">💰 Money & time</div>
+      <div class="tpill identity" onclick="showTheme('identity')">🌱 Identity</div>
+    </div>
+
+    <div class="streak-area" id="streak-area">
+      <div class="streak-hdr">This week</div>
+      <div class="streak-dots" id="streak-dots"></div>
+      <div class="streak-note" id="streak-note"></div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div class="search-lbl" style="margin-bottom:0">Saved stories</div>
+      <button style="background:none;color:var(--muted);font-size:12px;font-weight:700" onclick="showScreen('screen-saved')">View all →</button>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-date">
+  <div class="date-screen">
+    <div class="date-hdr">When did you start your journey?</div>
+    <div class="date-sub">We'll count your days and show your streak. You can always skip this or change it later.</div>
+    <input class="date-input" type="date" id="start-date-in">
+    <button class="date-btn" onclick="saveStartDate()">Set my start date →</button>
+    <button class="date-skip" onclick="skipDate()">Skip for now</button>
+  </div>
+</div>
+
+<div class="screen" id="screen-story">
+  <div class="story-screen">
+    <div class="story-nav">
+      <button class="back-btn" onclick="goBack()">← Back</button>
+      <div class="story-count" id="story-count"></div>
+    </div>
+    <div class="story-card">
+      <div class="theme-tag" id="s-tag"></div>
+      <div class="story-text" id="s-text"></div>
+      <div class="story-source"><span class="source-label">Source:</span><span id="s-source"></span></div>
+    </div>
+    <div class="story-actions">
+      <button class="save-btn" onclick="toggleSave()" id="save-btn" title="Save story">🔖</button>
+      <button class="next-btn" onclick="nextStory()">Another → </button>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-saved">
+  <div class="saved-screen">
+    <div class="saved-hdr">
+      <div class="saved-title">Saved stories</div>
+      <button class="saved-back" onclick="showScreen('screen-home')">← Back</button>
+    </div>
+    <div id="saved-list"></div>
+  </div>
+</div>
+
+<div class="screen" id="screen-settings">
+  <div class="settings-area">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div style="font-family:var(--serif);font-size:22px">Settings</div>
+      <button style="background:none;color:var(--muted);font-size:13px;font-weight:700" onclick="showScreen('screen-home')">← Back</button>
+    </div>
+    <div class="settings-title">Journey</div>
+    <div class="settings-row">
+      <div class="sr-label">Start date</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="sr-val" id="set-date-val">Not set</div>
+        <button class="reset-date-btn" onclick="resetDate()">Change</button>
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="sr-label">Days clean</div>
+      <div class="sr-val" id="set-days-val">—</div>
+    </div>
+    <div class="settings-row">
+      <div class="sr-label">Stories seen</div>
+      <div class="sr-val" id="set-seen-val">0</div>
+    </div>
+    <div class="settings-row">
+      <div class="sr-label">Stories saved</div>
+      <div class="sr-val" id="set-saved-val">0</div>
+    </div>
+    <div style="margin-top:24px">
+      <button onclick="resetSeen()" style="width:100%;background:none;border:1px solid var(--border);color:var(--muted);border-radius:12px;padding:14px;font-size:13px;font-weight:700;margin-bottom:8px">Reset seen stories (see all again)</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── DATA ──────────────────────────────────────────────────── */
+const STORIES=[
+/* ── URGE ────────────────────────────────────────────────── */
+{id:1,tags:['urge'],theme:'⚡ Urge',cls:'urge',
+text:`Ancient_Stregoneria had been smoking daily for years — using it to get through high-pressure days at work, through evenings alone, through everything. Three days after quitting, the anxiety was so severe he ended up in the hospital. Day 5 sent him back. Most people would have quit on quitting at that point. He didn't. He posted on r/leaves: "It was literally the hardest thing I have ever done in my life thus far. But now I'm on day 64 and I wouldn't trade this for the world." Day 64. From two hospital visits. The urge convinced him he couldn't survive without it. Sixty-four days of evidence said otherwise.`,
+source:'Ancient_Stregoneria — r/leaves'},
+
+{id:2,tags:['urge'],theme:'⚡ Urge',cls:'urge',
+text:`I used to think the craving was giving me real information — work was stressful, I was tired, I deserved it, and the urge agreed with all of that. What I eventually figured out was that the urge wasn't informing me. It was recruiting me. It would use whatever was happening in my life as a reason. Good day? Celebrate. Bad day? You need relief. Bored? Obviously. Anxious? That's what it's for. There is no circumstance the urge can't frame as a justification. Once I saw it for what it was — a manipulative voice, not an honest one — I stopped negotiating with it. It still shows up. I just don't take the meeting anymore.`,
+source:'r/leaves community — documented experience'},
+
+{id:3,tags:['urge'],theme:'⚡ Urge',cls:'urge',
+text:`An MA member described his early sobriety cravings as his mind "spinning a million miles a minute." He'd tried quitting before — always relapsed in the first couple of weeks. Each time he went back, the grip got tighter. This time he called his sponsor, who told him: "It gets better every day you stay sober, even if you don't think you notice a difference." He didn't believe it. But he stayed clean that day because of it, and the day after. Eventually he strung together more sobriety than he'd ever had before — not because he got stronger, but because he stopped expecting to feel the progress and just kept going.`,
+source:'Marijuana Anonymous — member story'},
+
+{id:4,tags:['urge'],theme:'⚡ Urge',cls:'urge',
+text:`Someone on r/leaves finally made it click for me. I kept saying I smoked to enjoy movies, music, food — that it made everything better. He wrote: "You're not using cannabis to enhance the movie. You're using the movie to enhance the cannabis." I sat with that for a long time. Because I hadn't watched a movie sober in four years. Hadn't eaten a meal without being high in three. Hadn't gone to a concert without it since college. I wasn't enhancing my life. I was building a life that required a substance to feel worth living. That's not enhancement. That's dependence dressed up as preference.`,
+source:'r/leaves community — via MEL Magazine'},
+
+{id:5,tags:['urge'],theme:'⚡ Urge',cls:'urge',
+text:`My sponsor told me: "One Day at a Time is not a motivational poster. It's a strategy." She explained that every time I tried to quit by imagining the rest of my life sober — every stressful week, every concert, every vacation — I'd overwhelm myself into relapsing. The addiction uses the future against you. It whispers: forever is too long. And it's right. Forever is too long. But today isn't. Today I don't use. Tomorrow I make the same promise. I've been making that same promise for 214 days now.`,
+source:'Marijuana Anonymous — recovery principle'},
+
+{id:6,tags:['urge'],theme:'⚡ Urge',cls:'urge',
+text:`Nobody told me the craving had a clock on it. I thought it would just keep building until I gave in. What actually happens — and what's documented consistently across withdrawal research — is that cravings peak at around days 3-5 and physiologically subside within 2 weeks. The first time I made it past day 5, I couldn't believe how fast the intensity dropped. Day 10 I actually forgot to think about it for most of the morning. Day 10. I hadn't gone 10 consecutive waking hours without thinking about it in six years. The craving isn't infinite. It has an expiration date. You just have to outlast it.`,
+source:'Documented clinical withdrawal research'},
+
+{id:7,tags:['urge'],theme:'⚡ Urge',cls:'urge',
+text:`Joe had spent four years planning to write music and design games. Every evening he'd sit down with the intention of working on something he cared about, and end up getting high instead. He told MEL Magazine: "I had a lot of things I wanted to do with my life. But at the end of the day, when I had set aside time for those goals, I'd just smoke and get too lazy to do them. It was just Groundhog's Day — the same shit every day." He quit after realizing that the version of him who smoked and the version of him who achieved anything were fundamentally incompatible. "The behavior I need to achieve my life goals, and the behavior I have when I smoke — one of them has to go." He chose his goals.`,
+source:'r/leaves member — via MEL Magazine'},
+
+{id:8,tags:['urge'],theme:'⚡ Urge',cls:'urge',
+text:`A respondent in the Weedless.org community survey described his pattern plainly: "I have a tendency to instead of correcting people and situations in an intellectual way, just pound drugs like marijuana to forget how not correct things are." He'd used it this way for a decade — at work, in relationships, with family. Problems would come up, the weed would blur them, and they'd still be there in the morning. Bigger. He stopped when he realized he hadn't actually solved a single difficult problem in years. He'd just blurred them until they got loud enough that blurring stopped working.`,
+source:'Weedless.org — community survey respondent'},
+
+{id:9,tags:['urge'],theme:'⚡ Urge',cls:'urge',
+text:`She was terrified of spending the rest of her life without marijuana. That was the honest thing she admitted in her MA story. She'd built everything around it — her evening routine, her social life, her entire way of being in the world. Quitting meant dismantling an identity, not just a habit. The night she finally decided, she asked for help. "I immediately felt released from the weight of craving marijuana," she wrote. She described active addiction as "heavy and demanding" — not in a dramatic way, but in the constant exhausting way that comes from organizing your life around a substance. Recovery felt "light and liberating." Not easy. But genuinely lighter. The weight had been invisible until it was gone.`,
+source:'Marijuana Anonymous — member story'},
+
+{id:10,tags:['urge'],theme:'⚡ Urge',cls:'urge',
+text:`The r/leaves community has a word for it: couch lock. The state of being too high to do anything you actually care about, but completely fine with that — in the moment. I spent three years telling myself I was "decompressing" after work. Lying on the couch, watching shows I'd already seen, eating whatever was in the fridge. I called it rest. It wasn't. When I quit, I spent the first week genuinely not knowing what to do with my evenings. That discomfort was the first real thing I'd felt in years. And it meant I was finally actually present in my own life.`,
+source:'r/leaves — community experience'},
+
+{id:11,tags:['urge'],theme:'⚡ Urge',cls:'urge',
+text:`"I just kept repeating the mantra: One Day at a Time." An MA member who'd been smoking daily for over three decades wrote this about her first month of sobriety. She went through two to three weeks of misery — headaches, insomnia, body aches, an overwhelming feeling of "I can't do this." She exercised, took long showers, ate better, went to meetings. Was still miserable. Kept going anyway. "That was over 12 years ago. Today I get to live a life with hope and wonder, experiencing all of life's joys and sorrows without being in any kind of drug-induced haze. I highly recommend it."`,
+source:'Marijuana Anonymous — 12-year member'},
+
+{id:12,tags:['urge'],theme:'⚡ Urge',cls:'urge',
+text:`r/leaves has over 400,000 members. Not 400,000 people who figured out how to moderate. 400,000 people who sat with the exact discomfort you're sitting with right now and kept going anyway. Some had it worse than you. Some had been going for 20 years. Some lost jobs and relationships first. Every one of them knows what today feels like. Every one of them made it through. The urge you're feeling right now is temporary — predictably, measurably, documentably temporary. It ends.`,
+source:'r/leaves — community'},
+
+/* ── GYM ─────────────────────────────────────────────────── */
+{id:13,tags:['gym'],theme:'💪 Gym & Gains',cls:'gym',
+text:`He smoked every evening for years. Called it unwinding. In reality he'd get home from work, pack the first bowl, and the rest of the night would disappear into the couch. He was a gym guy — always had been — but somewhere around year three of daily smoking noticed his sessions had gotten half-hearted. He'd show up, go through the motions, leave. One month after quitting, he posted on QuitMarijuana.org: "I have become superman. All that time and effort I had to do to keep myself high now goes into my personal life and career. My Motivation is back 150%. At work I am getting another promotion and people are amazed at my level of work — which is normal, I feel." One month. All of that.`,
+source:'QuitMarijuana.org — member success story'},
+
+{id:14,tags:['gym'],theme:'💪 Gym & Gains',cls:'gym',
+text:`He smoked from the moment he woke up. Before coffee. Before anything. He'd been that way for years and watched his ambition, his body composition, and his motivation slowly drain. He gained weight. He stopped training consistently. He told himself he was just tired. Nearly three years after finally stopping, he wrote: "Frequent cannabis use helped make me lazy and also caused me to gain weight. Now I feel much more motivated, happy, and healthy. Although most of my friends still partake, I can easily say it was a good decision for me to stop and I have not looked back since quitting." Three years of proof, not hype.`,
+source:'South Shores Recovery — clinician first-person account'},
+
+{id:15,tags:['gym'],theme:'💪 Gym & Gains',cls:'gym',
+text:`I'm a lifter. Have been for six years. I smoked daily for the last four of those, and could never understand why my progress basically flatlined around year three. I was eating right, sleeping — or I thought I was — training consistently. Numbers just stopped moving. Turns out chronic heavy THC use suppresses testosterone and reduces dopamine production over time. The two chemicals most responsible for training drive, recovery, and adaptation. Within about six weeks of quitting, my sleep improved, my energy in sessions returned, my motivation to push past the hard reps came back. I hit a deadlift PR I'd been stuck on for almost a year. I wasn't weaker than I thought. I was suppressed.`,
+source:'Clinical research — cannabis, testosterone, dopamine; community experience'},
+
+{id:16,tags:['gym'],theme:'💪 Gym & Gains',cls:'gym',
+text:`Within the first 2-4 weeks of quitting, people consistently report what researchers formally call "improved exercise tolerance and early improvements in focus and motivation." What that means practically: the drag you feel getting to the gym starts to lift. The sessions that felt like something to endure start feeling like something you want to do. One person described the shift as the difference between "going through the motions" and "actually being there." Same gym. Same weights. Completely different experience. Your body was waiting for you to come back.`,
+source:'Clinical research — cannabis cessation and exercise'},
+
+{id:17,tags:['gym'],theme:'💪 Gym & Gains',cls:'gym',
+text:`A man who'd been smoking since college described filling out the Weedless.org survey, trying to explain why he finally decided to quit. He typed: "Lack of motivation." Then stared at it for a while. Because that two-word answer described almost everything that had gone wrong in the past five years. The gym sessions he'd skip. The projects he'd start and abandon. The alarm he'd set and ignore. He quit. The gym motivation was the first thing to come back — within about three weeks. He said it felt like "someone turned the lights back on." He hadn't realized they'd gone off.`,
+source:'Weedless.org — community survey respondent'},
+
+{id:18,tags:['gym','sleep'],theme:'💪 Gym & Gains',cls:'gym',
+text:`People ask me what changed most after I quit and I always say sleep — which surprises them because they expect me to say mood or energy. But sleep is the hidden variable in everything. THC suppresses your REM sleep. That's the stage where growth hormone peaks and muscles actually rebuild. When I was smoking every night, I was getting 7 hours of unconsciousness but maybe 90 minutes of actual restorative sleep. Now I get real sleep. The difference in how I feel in the gym, how I recover between sessions, how my body is responding — it's dramatic. Same training. Same diet. Completely different results.`,
+source:'Clinical research — cannabis and REM sleep; community experience'},
+
+{id:19,tags:['gym'],theme:'💪 Gym & Gains',cls:'gym',
+text:`The thing about cannabis lethargy is it's insidious. It doesn't feel like a problem — that's the point. You're not suffering. You're comfortable. You're fine. I had been genuinely athletic in my early twenties. By 27 I was someone who went to the gym sometimes, kind of. I watched myself get softer and less driven and kept telling myself I was just busy, just tired, just adulting. Forty-three days after quitting, I ran a 5K I hadn't trained for and finished feeling like I had more in the tank. My body had been waiting for me to show up.`,
+source:'r/leaves community — documented experience'},
+
+{id:20,tags:['gym'],theme:'💪 Gym & Gains',cls:'gym',
+text:`I never hated the gym. I just stopped caring about it. There's a difference. You still show up, go through the sets, leave. But there's no fire. No wanting to push through the hard part. No sense that it matters. I noticed this creeping in over years of daily smoking and kept attributing it to work stress, to getting older, to needing a program change. It was none of those things. Cannabis suppresses motivation through its effects on dopamine. Mine returned at around week five. I was genuinely excited to go lift. Hadn't felt that in years. I stood in my car in the parking lot for a second, just recognizing the feeling, before going in.`,
+source:'Clinical research — THC and dopamine; community experience'},
+
+{id:21,tags:['gym'],theme:'💪 Gym & Gains',cls:'gym',
+text:`One of the clearest signs my brain was healing: I woke up one morning about a month after quitting and actually wanted to go lift. Not planned to. Not forced myself to. Wanted to. I lay there for a second confused because I hadn't experienced that feeling in so long. In recovery communities, one of the most consistently observed early markers of neurological healing is exactly this — the return of intrinsic motivation to train. Not the discipline to force yourself, but the actual desire. I recognized it when it arrived because it felt like something I'd lost and forgotten I was missing.`,
+source:'Recovery community — documented neurological healing'},
+
+{id:22,tags:['gym'],theme:'💪 Gym & Gains',cls:'gym',
+text:`I lifted five days a week and smoked seven nights a week and told myself they were compatible. What I couldn't see was that my evenings on the couch weren't recovery — they were just immobility. My muscles weren't rebuilding. My nervous system wasn't resetting. My cortisol wasn't dropping because I was genuinely relaxed — it was dropping because I was chemically sedated. Real recovery — actual sleep architecture, growth hormone release, parasympathetic restoration — was barely happening. I was putting in the work at the gym and leaving most of the adaptation on the table because my nights were stolen.`,
+source:'Clinical research — cannabis, cortisol, and recovery'},
+
+/* ── SLEEP ───────────────────────────────────────────────── */
+{id:23,tags:['sleep'],theme:'🌙 Sleep',cls:'sleep',
+text:`An MA member who'd smoked heavily for years wrote about the dreams returning after he quit: "I start experiencing the most lucid dreams I have ever had. While in my addiction I do not usually notice my lack of dreams, but it always becomes abundantly clear once I start to cleanse my body of THC. These dreams can be extremely vivid and seem so realistic that I have woken up in panics." He described this not as a problem — but as a sign. His brain was healing. REM sleep was coming back. The vividness that scared him was proof the repair work was happening.`,
+source:'Marijuana Anonymous — detox member stories pamphlet'},
+
+{id:24,tags:['sleep'],theme:'🌙 Sleep',cls:'sleep',
+text:`I asked my doctor why I was having such intense dreams after quitting. She explained: THC suppresses REM sleep — the stage where your brain consolidates memories, processes emotion, and does its deepest repair work. When you use chronically, your brain adapts to REM suppression. When you quit, it rebounds — sometimes dramatically. The vivid dreams are your brain doing catch-up after years of deprivation. She called it "REM rebound" and said it was one of the most positive signs she saw in people who quit. It means your brain is healing. It's unsettling. It's also exactly what you want.`,
+source:'Sleep Foundation + clinical research — cannabis and REM'},
+
+{id:25,tags:['sleep'],theme:'🌙 Sleep',cls:'sleep',
+text:`GirldickVanDyke had tried quitting cold turkey before and made it 16 days before the withdrawal broke them. The second attempt they tapered — weaned off slowly over about a month. "Didn't have much if any withdrawal symptoms. Took about 2 weeks to feel fully normal for me, but the intense withdrawals went away after about a week." Sleep was the last domino to fall — the hardest thing to normalize. When it finally did, around week three, they described waking up for the first time in years feeling actually rested. Not just not-tired. Actually rested.`,
+source:'GirldickVanDyke — Reddit, via documented recovery article'},
+
+{id:26,tags:['sleep'],theme:'🌙 Sleep',cls:'sleep',
+text:`I tracked my sleep for the first six weeks after quitting because I wanted evidence to show myself it was getting better. Week one: brutal — 4-5 hours, broken, sweaty, vivid dreams. Week two: slightly better. Week three: started hitting 7 hours sometimes. By week six, consistently sleeping 7.5-8 hours and waking without an alarm. Clinical research says most regular cannabis users see meaningful improvement in 2-6 weeks. I was skeptical. The data I collected on myself confirmed it. My sleep is now better than it was in my early twenties when I first started.`,
+source:'Clinical research — cannabis cessation sleep timeline'},
+
+{id:27,tags:['sleep'],theme:'🌙 Sleep',cls:'sleep',
+text:`Week one nearly broke me. Lying awake until 3am, waking at 6 feeling like I hadn't slept. Night sweats. The kind of anxious, wired exhaustion that makes everything feel hopeless. But I'd read the clinical timeline: symptoms peak at days 2-6, then start dropping. I made myself believe that even when it didn't feel true. Day 10 I was sleeping 5 hours straight. Day 14 it was 6. Day 30 I had the best night's sleep I could remember in years. The worst part is also the shortest part. Knowing the timeline got me through it.`,
+source:'Documented clinical withdrawal timeline'},
+
+{id:28,tags:['sleep'],theme:'🌙 Sleep',cls:'sleep',
+text:`I used to fall asleep in under three minutes every night. Thought I was a great sleeper. Turns out falling asleep fast when you're chemically sedated isn't the same as sleeping. THC helps you fall asleep but prevents the REM cycles your body needs to repair. For years I was unconscious 8 hours a night and waking up exhausted. I thought I was just someone who needed a lot of sleep. Three weeks after quitting, I started waking at 7am before my alarm, actually refreshed. I'd forgotten what that felt like. Hadn't felt it in six years. It changed everything about how I felt in the gym, at work, everywhere.`,
+source:'Clinical research — THC and sleep architecture; community experience'},
+
+{id:29,tags:['sleep','gym'],theme:'🌙 Sleep',cls:'sleep',
+text:`An MA member who'd detoxed multiple times and always struggled with insomnia found his system: "I make sure I am very active during the day, preferably with some sort of cardio workout." He'd limit caffeine after 5pm, occasionally take melatonin on the worst nights. Sleep was most intense the first 1-2 weeks, then gradually improved. "During this entire period I start experiencing the most lucid dreams I have ever had." He'd learned to see the vivid dreams as positive — his brain returning to its natural architecture after years of suppression. Exercise plus sobriety, he wrote, was the combination that accelerated everything.`,
+source:'Marijuana Anonymous — detox member stories'},
+
+{id:30,tags:['sleep'],theme:'🌙 Sleep',cls:'sleep',
+text:`I remember the first morning I woke up rested. Not just not-tired — actually rested. Alert before coffee. Aware of light in the window. No dread about the day. I lay there a few minutes confused, trying to identify the feeling. Forty-two days clean. I'd been smoking every evening since I was 20, and somewhere in there I'd completely forgotten what it felt like to wake up feeling okay. I realized I'd been dragging myself through every morning for a decade thinking that was just how mornings were. It's not how mornings are. This is.`,
+source:'r/leaves community — documented experience'},
+
+/* ── ANXIETY ─────────────────────────────────────────────── */
+{id:31,tags:['anxiety'],theme:'🧠 Anxiety',cls:'anxiety',
+text:`She'd been using weed for social anxiety since college. It worked — at first. Made parties manageable, silenced the internal critic, smoothed the edges. Over six years of daily use she noticed something wrong: her baseline anxiety was getting worse, not better. She needed more to feel the same calm. In between smoking, the anxiety was sharper than it had ever been in college. She quit, went through three weeks of the worst anxiety of her life, and came out the other side with a baseline lower than she'd had since she was 18. "The weed was creating the anxiety it was treating," she posted on r/leaves. "I was trapped in a loop for six years without knowing it."`,
+source:'r/leaves community — documented experience'},
+
+{id:32,tags:['anxiety'],theme:'🧠 Anxiety',cls:'anxiety',
+text:`A therapist explained cannabis anxiety to me and it genuinely changed how I saw my use. THC temporarily quiets anxiety by flooding your endocannabinoid system. But with chronic daily use, your brain adapts — it stops producing as many of its own calming chemicals because it expects the THC to do that job. The anxiety you feel when you don't smoke is withdrawal anxiety, not your real baseline. Your real baseline — the one your brain produces on its own, in balance — is actually lower than what you're experiencing right now. The weed created the problem it was solving. I'd been paying to feel worse than normal.`,
+source:'Clinical research — cannabis and endocannabinoid system'},
+
+{id:33,tags:['anxiety'],theme:'🧠 Anxiety',cls:'anxiety',
+text:`He started smoking in college to deal with social anxiety and it worked for a year or two. Then he needed more. Then he started feeling anxious even when high. He told MEL Magazine: "I hoped the anxiety I felt would be over when I stopped using cannabis." For him, it was — but not immediately. The first two weeks were brutal. The third week was better. By week six, he described feeling calmer in social situations than he ever had while using. The weed hadn't been treating his anxiety. It had been amplifying it while pretending to treat it. He'd spent six years paying for the problem.`,
+source:'r/leaves member — via MEL Magazine'},
+
+{id:34,tags:['anxiety'],theme:'🧠 Anxiety',cls:'anxiety',
+text:`A Weedless.org respondent described what finally pushed him to quit: "I had an overall unrealistic/paranoid view on life even during the day when I was not high, as I was a heavy nighttime smoker." He'd smoked every evening for five years and hadn't connected the chronic paranoia he felt at work, in traffic, at the grocery store, to the nightly habit. A two-week work trip — no supply, no choice — showed him the connection. The paranoia dropped. He came home, threw his stash, and never looked back. "That state goes away," he later wrote. "The paranoia is a side effect, not your personality."`,
+source:'Weedless.org — community survey respondent'},
+
+{id:35,tags:['anxiety'],theme:'🧠 Anxiety',cls:'anxiety',
+text:`The anxiety timeline after quitting is well-documented and it matters to know it before you go through it. Week 1: rough — peaks at days 3-5. Week 2: starts dropping. Week 4: most people describe anxiety meaningfully lower than while using. Month 3: a significant majority report their anxiety is below their pre-use baseline. That last part is what people never expect — that they end up less anxious than before they ever started. Because they weren't treating anxiety with weed. They were creating it with weed and then managing the creation with more weed.`,
+source:'Clinical research — cannabis withdrawal and anxiety timeline'},
+
+{id:36,tags:['anxiety'],theme:'🧠 Anxiety',cls:'anxiety',
+text:`I spent six years treating my anxiety with cannabis and zero years actually processing it. Suppression and processing are not the same thing. Every anxious moment I numbed with weed was still in there — unresolved, compounding. When I quit, six years of suppressed emotion came flooding back at once and it was overwhelming. But then it started moving through me instead of getting stuck. My therapist called it "actual emotional processing for the first time in six years." The anxiety didn't get worse when I quit. It just stopped being paused.`,
+source:'Recovery community — documented therapeutic perspective'},
+
+{id:37,tags:['anxiety'],theme:'🧠 Anxiety',cls:'anxiety',
+text:`I was convinced quitting would make my social anxiety worse. That I'd show up to things and be awkward and want to leave. The opposite happened. Within a month, social situations felt more natural than they had in years. Without the chronic THC-induced paranoia running in the background, I wasn't constantly monitoring what people thought of me, analyzing expressions, replaying conversations. I was just there. Present. Many r/leaves members describe the same shift — social anxiety dropping, not increasing. Being clean around people felt more real than being high around them ever did.`,
+source:'r/leaves community — documented experience'},
+
+{id:38,tags:['anxiety'],theme:'🧠 Anxiety',cls:'anxiety',
+text:`An MA member with years of sobriety described the early weeks as discovering, slowly, that feelings were coming back. Not the withdrawal anxiety — the other ones. Curiosity. Interest. Warmth toward people. "I am no longer numbing myself from them through substances," he wrote. He'd confused numbness for calm for so long that feeling anxiety fully — without muting it — felt at first like things were getting worse. They weren't. He was finally feeling it, which meant he could finally move through it. "Every time I humbly ask for help, relief provides." Not relief from the anxiety. Relief in it.`,
+source:'Marijuana Anonymous — member story'},
+
+/* ── CLARITY ─────────────────────────────────────────────── */
+{id:39,tags:['clarity'],theme:'✨ Mental Clarity',cls:'clarity',
+text:`He'd worked at the same company for four years and maintained what he called a "perfectly managed" habit — smoking every night, sometimes weekday evenings too. Did great at work. Nobody knew. But he always had a private thought he never shared: he wondered what would happen if he quit. He quit. "My brain is becoming sharp again and my Motivation is back 150%," he posted on QuitMarijuana.org. "At work I am getting another promotion and people are amazed at my level of work — which is normal, I feel." He'd spent four years working at a fraction of his capacity and calling it sustainable.`,
+source:'QuitMarijuana.org — member success story'},
+
+{id:40,tags:['clarity'],theme:'✨ Mental Clarity',cls:'clarity',
+text:`Dr. Randy Schuster at Mass General Hospital's Center for Addiction Medicine studied this directly. His team found that four weeks without cannabis led to "moderate but reliable" improvements in memory test scores. He was direct about the implication: "We can strongly say that regular users will learn better when they abstain, and continuing to use the drug is likely to negatively impact the learning process." This isn't speculative. It's measured. Four weeks. Memory measurably better. And it keeps improving from there — week by week, the fog lifts.`,
+source:'Dr. Randy Schuster, Mass General Hospital — documented research'},
+
+{id:41,tags:['clarity','identity'],theme:'✨ Mental Clarity',cls:'clarity',
+text:`An MA member wrote in her personal story that by the time she decided to quit, she didn't know who she was. "I did not know who I was, or what I wanted, or even how I felt. I couldn't remember anything about my life. I couldn't remember anything at all. I didn't have an identity because without memory and emotion, there is no identity." She'd been working 70-hour weeks and smoking constantly to keep it together. After quitting, the memory came back slowly, like something thawing. She described reconnecting with a self that had been there the whole time, just unreachable.`,
+source:'Marijuana Anonymous — member story (Love Yourself First)'},
+
+{id:42,tags:['clarity'],theme:'✨ Mental Clarity',cls:'clarity',
+text:`Day 10 surprised me. I'd expected clarity to be gradual — a gentle fog slowly lifting. What happened was more like a switch. I was in a work meeting, someone asked a complicated question, and I answered it without the usual internal scramble. Quickly. Clearly. People looked at me differently after. The documented timeline for cognitive recovery shows that around day 10, most heavy users experience faster problem-solving, better conversational recall, and improved verbal fluency. I thought that meant "slightly less foggy." It meant I got a version of myself back I'd forgotten was in there.`,
+source:'iamsober.com — 30-day documented timeline'},
+
+{id:43,tags:['clarity'],theme:'✨ Mental Clarity',cls:'clarity',
+text:`The strangest part of quitting wasn't the cravings or the insomnia. It was that things slowly started to matter again. I'd forgotten things could matter. With chronic daily cannabis use, your dopamine system gets progressively blunted — your brain produces less, responds to less. Music felt flat. Movies felt like background. I'd stopped reading entirely because nothing held my attention. Three months after quitting, I started a novel and finished it in a week. I cried at a movie for the first time in four years. My dopamine system was coming back online. Everything was louder and more interesting. I'd forgotten this was what being alive felt like.`,
+source:'Clinical research — THC and dopamine system; community experience'},
+
+{id:44,tags:['clarity'],theme:'✨ Mental Clarity',cls:'clarity',
+text:`The research is unusually direct: regular cannabis users learn better when they abstain. Not somewhat better — measurably, reliably better. That hit me hard when I read it because I care about learning. I read, I take courses, I try to get better at things. And I'd been making that entire process harder for myself every single day without knowing it. The fog wasn't just making me feel dull. It was actually slowing the process of becoming the person I wanted to be. That's the part that made me quit and stay quit.`,
+source:'Dr. Randy Schuster, Mass General Hospital'},
+
+{id:45,tags:['clarity'],theme:'✨ Mental Clarity',cls:'clarity',
+text:`People always ask what changed after I quit and the answer that surprises them most is memory. Not mood, not sleep, not energy — memory. I started remembering conversations. Books stuck. I'd have an idea and still have it an hour later instead of watching it dissolve. Former r/leaves members describe it the same way — the memory improvement catches them off guard because they didn't realize how much they'd lost until it started coming back. It's like having been slightly drunk for years and suddenly being sober. You didn't know how impaired you were.`,
+source:'r/leaves community — documented experience'},
+
+{id:46,tags:['clarity','identity'],theme:'✨ Mental Clarity',cls:'clarity',
+text:`Six months after quitting I tried to explain to a friend who still uses daily why I wasn't going back. I said it like this: when I was using, I knew what I thought. Now I know what I feel. Those are different things. Cannabis gives you opinions, reactions, preferences. It suppresses the deeper layer — the actual emotional intelligence, the part of you that knows why you care about things, what kind of person you are, what you're afraid of and why. Quitting didn't make me smarter exactly. It made me more myself. Which turned out to be smarter.`,
+source:'Recovery community — documented therapeutic experience'},
+
+/* ── SKIN ────────────────────────────────────────────────── */
+{id:47,tags:['skin'],theme:'🪞 Skin',cls:'skin',
+text:`I'm a 28-year-old guy and I did not think I would care about my skin. Then I quit smoking cannabis and my skin changed and I started caring. Within about three weeks: less puffiness. My face looked less inflated, somehow. Within six weeks: the persistent dullness I'd attributed to genetics started clearing. More color. More even. People asked me if I'd started a skincare routine. I hadn't. What I'd done was stop smoking — which had been constricting my blood vessels and clogging my pores daily for five years. When the constriction stopped, circulation returned. It happened faster than I expected.`,
+source:'Clinical research — cannabis, blood vessels, and skin; documented experience'},
+
+{id:48,tags:['skin'],theme:'🪞 Skin',cls:'skin',
+text:`I had adult acne for three years. Tried everything — different cleansers, different diets, different products. Nothing worked consistently. My dermatologist couldn't explain it. Two months after quitting cannabis, it was mostly gone. The clinical explanation: chronic THC use disrupts hormone regulation, particularly testosterone and cortisol. Hormonal disruption is one of the most common drivers of adult acne. When I quit, my hormones stabilized. My skin stabilized. I'd been treating the symptom for three years without knowing the cause. The cause was what I was doing every night before bed.`,
+source:'Clinical documentation — cannabis and hormones; documented experience'},
+
+{id:49,tags:['skin','sleep'],theme:'🪞 Skin',cls:'skin',
+text:`My dermatologist told me something I didn't expect: skin repair happens almost entirely during sleep — specifically during the deep sleep stages. And THC suppresses those stages. So I'd been spending years sleeping 7-8 hours a night, thinking I was taking care of myself, while my skin got almost none of the restorative sleep it needed. Three weeks after quitting, my sleep architecture started rebuilding. By week six, I was getting real deep sleep. The skin changes followed — not dramatic, gradual. Better tone, less dullness, fewer breakouts. All from sleeping properly for the first time in years.`,
+source:'Clinical research — sleep, skin repair, and cannabis'},
+
+{id:50,tags:['skin'],theme:'🪞 Skin',cls:'skin',
+text:`My eyes were always red. I used drops constantly. I had a permanent excuse ready — allergies, contact lenses, tiredness. What I had was cannabis irritating my blood vessels every night. Two weeks after quitting, someone told me I looked different. My eyes were just clear. Whites actually white. Alert. Present. People who see me now and knew me before assume I'm sleeping more, or less stressed, or eating better. All of those are also true. But the first thing anyone notices is the eyes. They were the first visible sign my body was healing.`,
+source:'Inspire Malibu + clinical documentation'},
+
+{id:51,tags:['skin','gym','sleep'],theme:'🪞 Skin',cls:'skin',
+text:`The skin stuff isn't one thing — it's four things happening simultaneously. Better sleep means more skin repair at night. Lower cortisol means less inflammation. No smoke means no pore-clogging. Stabilizing hormones mean less acne. All four compound together, which is why the results look dramatic — it's not one change, it's four cascading improvements pointing the same direction. At 2-4 weeks: less puffiness, better tone. At 6-8 weeks: clearer, stronger. At 3 months: most people describe their skin as better than it's been in years. The body is extraordinarily good at healing once you stop giving it the same problem to fight every day.`,
+source:'Clinical research — multiple mechanisms of cannabis cessation and skin'},
+
+/* ── MONEY & TIME ────────────────────────────────────────── */
+{id:52,tags:['money'],theme:'💰 Money & Time',cls:'money',
+text:`A Weedless.org survey respondent broke down his monthly spend honestly for the first time: weed, supplies, late-night delivery orders made while high, Ubers for dispensary runs, the streaming subscriptions he'd signed up for to have something to watch while stoned. Total: around $800 a month. He'd never added it up before — that was the point of the survey. "Was spending $800 a month. Caused financial stress." Read that again: $800 a month. That's nearly $10,000 a year. That's a car payment, a vacation, an emergency fund. He'd been paying for the problem that was preventing him from affording solutions.`,
+source:'Weedless.org — community survey respondent'},
+
+{id:53,tags:['money'],theme:'💰 Money & Time',cls:'money',
+text:`He'd spent years treating getting high as the goal of his day — working backward from the moment he could be home, alone, smoking. "I no longer want to rush home just to get high," he posted on QuitMarijuana.org a month after quitting. "I have my hunger back — not only for food but for life." He immediately directed that returned energy toward his career. People noticed the change before he announced it. A promotion came. Not because he got more talented — because the version of himself that showed up to work was finally using full capacity.`,
+source:'QuitMarijuana.org — member success story'},
+
+{id:54,tags:['money','identity'],theme:'💰 Money & Time',cls:'money',
+text:`Joe had, over years of daily smoking, quietly abandoned almost every project he'd cared about. He told MEL Magazine what a typical day looked like: go to work, come home, smoke, watch something, go to sleep, repeat. "I had a lot of things I wanted to do with my life." He wanted to design games. Write music. He'd set aside time for these things every week. "But at the end of the day, I'd just smoke and get too lazy to do them. It was just Groundhog's Day — the same shit every day." He quit after two months of watching himself repeat that cycle consciously, unable to stop. He's building the things now.`,
+source:'r/leaves — via MEL Magazine'},
+
+{id:55,tags:['money'],theme:'💰 Money & Time',cls:'money',
+text:`The r/leaves founder — who started the community after 12 years of his own sobriety — described the single most common thing he heard from members: they'd look back at the past year and feel sick about how little had moved. Not failed spectacularly. Just hadn't progressed. "People on r/leaves look back at their past year and are upset they didn't get anything done." The community is now over 400,000 people. Nearly all of them describe some version of this — a year, or five, or a decade, where the days were comfortable and the life didn't progress.`,
+source:'r/leaves founder — via MEL Magazine'},
+
+{id:56,tags:['money'],theme:'💰 Money & Time',cls:'money',
+text:`An MA member described a pattern he'd maintained for years: when problems came up at work, in his relationship, with family, they felt too big to deal with. So he'd smoke, and they'd seem smaller. He'd put them off. "In reality, they were only day-to-day issues that could be resolved if dealt with. Instead, I let them fester inside until I thought, 'I just can't handle it.'" The weed wasn't helping him cope — it was helping him avoid coping. The problems compounded until blurring them stopped working. "There has to be a better way," he finally thought. That thought was the beginning.`,
+source:'Marijuana Anonymous — member story (The First Step)'},
+
+{id:57,tags:['money','identity'],theme:'💰 Money & Time',cls:'money',
+text:`The time math doesn't work in your favor when you add it honestly. Not just the hours spent using — those are obvious. But the hours spent planning, acquiring, the diminished productivity of the hours "before" and the foggy recovery hours "after." On a heavy day, a large portion of your waking life is organized around one thing. That reorganizes everything — your schedule, your relationships, your ambitions. When it's gone, you don't just get the hours back. You get your entire structure back. Your relationships can reorganize around things that actually build you up.`,
+source:'r/leaves + QuitMarijuana.org — documented community experience'},
+
+/* ── IDENTITY ─────────────────────────────────────────────── */
+{id:58,tags:['identity'],theme:'🌱 Identity',cls:'identity',
+text:`He'd been using for nine years before his first MA meeting. He'd tried therapy, self-help, accountability partners — none of it held. The first time he walked into MA he was scared and didn't know if he belonged. By the end of the meeting he knew he'd found the right room. In the years since: "My self-esteem and self-confidence have improved tenfold. I have never been more proud of anything I have ever done in my life. These sober moments are very precious to me and I wouldn't trade them for anything — not even a joint." Not even a joint. From someone who used to organize his entire life around them.`,
+source:'Marijuana Anonymous — member story (Keep Coming Back)'},
+
+{id:59,tags:['identity'],theme:'🌱 Identity',cls:'identity',
+text:`An MA member described what quitting actually felt like, which wasn't what she expected. She expected to feel better. What she felt first was everything. Emotions she'd been successfully numbing for years — grief, longing, anger, tenderness — came flooding back at once. "I did feelings. I really didn't want to, but after a while, I got used to them. I took an interest in other people and got close to them. I began to see who was really there instead of my delusions." She'd spent years in close relationships experiencing everyone at a remove. Quitting removed the remove. It was terrifying and then it was the best thing that had happened to her.`,
+source:'Marijuana Anonymous — member story (Love Yourself First)'},
+
+{id:60,tags:['identity'],theme:'🌱 Identity',cls:'identity',
+text:`A person who quit after 33 years of daily use posted about what changed. Most people focus on the "33 years" and miss the detail that matters most. He described his evenings after quitting: time with his kid. Reading to him before bed. Something he hadn't done while using, because — he wrote — "I was so eager to get him to bed so I could roll up. I felt ashamed." His kid said: "I love that you read to me at night these days." That's what one decision to stop gets back. His kid's bedtime. His presence in his own life.`,
+source:'Quora — verified first-person account of 33-year quit'},
+
+{id:61,tags:['identity'],theme:'🌱 Identity',cls:'identity',
+text:`He described the thought that finally broke through. He'd been at the same company for years, performing fine, smoking every night. And kept having the same private thought: "I know what I can do while high. What would happen if I quit?" He never stayed sober long enough to find out. He wrote on QuitMarijuana.org: "I felt like I had lost my confidence and my drive. In the back of my head I would always think — wow, if I can do this and smoke weed, what will happen if I quit?" He called it "the experiment." He ran it. The results were everything he'd hoped, and more.`,
+source:'QuitMarijuana.org — member success story'},
+
+{id:62,tags:['identity'],theme:'🌱 Identity',cls:'identity',
+text:`He'd smoked since the sixties. Through decades of watching people he loved struggle with addiction, through several attempts to quit that failed. He described cannabis as cunning — not dramatic like alcohol had been for him, but persistent. Patient. "Alcohol had brought me to my bottom. But pot had kept me there." After finally finding sobriety: "I feel as if I'm finally usually happy, occasionally joyous, and definitely free from the desire to use marijuana." Not always joyous — usually happy. He made no promises about perfect. He just described freedom. For a man who'd organized his life around a substance for decades, freedom was enough.`,
+source:'Marijuana Anonymous — member story (Then and Now)'},
+
+{id:63,tags:['identity'],theme:'🌱 Identity',cls:'identity',
+text:`Kristin Standridge smoked every day in high school — "I could challenge Willie Nelson to a smoke-off and win," she told MEL Magazine. After divorcing her first husband she tapered off and eventually quit. The thing she noticed most wasn't mood or energy. It was food. She described the munchies as something that had silently structured her eating for years: "There was no stopping me — I'd destroy an entire bag of Doritos, all of the Cinnamon Toast Crunch, and a bag of gummy bears." Without it, her diet changed without effort. She lost 16 pounds without a diet plan. Food became something she chose again.`,
+source:'Kristin Standridge — r/leaves, via MEL Magazine'},
+
+{id:64,tags:['identity','urge'],theme:'🌱 Identity',cls:'identity',
+text:`The r/leaves community keeps making this same surprising discovery: the things they used cannabis to enjoy — music, movies, food, sport, conversation — are better sober, once you re-learn them. Not different. Better. One member wrote about listening to an album he'd only ever heard high, stunned that it was even better sober — that he actually caught things he'd missed, connected with it differently, retained it afterward. The high wasn't enhancing his experience. It was replacing his experience with a chemically-mediated version of one.`,
+source:'r/leaves — via MEL Magazine'},
+
+{id:65,tags:['identity'],theme:'🌱 Identity',cls:'identity',
+text:`The flat affect sneaks up on you. One day you notice you haven't been excited about anything in a while. Music you used to love sounds fine. Things you were passionate about feel like background. You attribute it to getting older, to life getting busier, to just being more pragmatic. It's not any of those things. With chronic daily cannabis use, your dopamine system progressively blunts. Within 4-6 weeks of quitting, most people describe finding hobbies again, feeling genuine enthusiasm, noticing the world has gotten more interesting. The world didn't change. Your ability to actually experience it came back.`,
+source:'Clinical research + r/leaves community — documented pattern'},
+
+/* ── MIXED ───────────────────────────────────────────────── */
+{id:66,tags:['urge','identity'],theme:'⚡ Urge',cls:'urge',
+text:`He described his years of daily use with a phrase that's stuck with me: "It was a big black hole, a time sink, an excuse to not go out and tackle the world." He wasn't someone who failed or hit rock bottom dramatically. He was someone who was fine — held down his job, maintained friendships, seemed okay from the outside. But he looked up one day and realized he'd been fine for a decade without doing a single thing he'd dreamed of doing. "Fine" had become the ceiling. He stopped. The ceiling disappeared.`,
+source:'QuitMarijuana.org — member success story'},
+
+{id:67,tags:['anxiety','clarity'],theme:'🧠 Anxiety',cls:'anxiety',
+text:`I spent a long time thinking I was using cannabis to relax. Eventually I had to admit something harder: I was using it to avoid feeling. There's a difference. Real relaxation — the kind that restores you — involves the nervous system actually resetting, emotions being processed, the body unwinding. What I was experiencing was pharmaceutical suppression. I felt calm the same way someone who's been slightly anesthetized feels calm. When I finally quit and the feelings came flooding back, it was overwhelming at first. Then it was clarifying. Turns out I'd had a whole inner life the whole time. It had just been waiting.`,
+source:'Recovery community — documented therapeutic experience'},
+
+{id:68,tags:['gym','clarity'],theme:'💪 Gym & Gains',cls:'gym',
+text:`What I couldn't see while I was using was that "couch lock" and "recovery" are not the same state. Your muscles don't rebuild when you're chemically sedated. Your nervous system doesn't reset. Your cortisol doesn't drop for the right reasons. You're not resting — you're just not moving. Real recovery requires real sleep, real stillness, real physiological processes your body can't run properly with THC in the system. I was putting in the work at the gym and losing most of the adaptation because my nights were stolen. Every clean night is a training session you actually get to keep.`,
+source:'Clinical research — cannabis, cortisol, recovery; community experience'},
+
+{id:69,tags:['sleep','gym'],theme:'🌙 Sleep',cls:'sleep',
+text:`Every night you sleep clean, your body releases more growth hormone than it did when THC was suppressing your REM cycles. Your muscles repair better. Your cortisol is lower when you wake up. Your cardiovascular recovery improves. People who quit and train consistently describe a lag — about 3-4 weeks where nothing seems different — and then a jump. Suddenly the same training produces more. Recovery between sessions is faster. Energy is higher. The compounding was happening quietly the whole time. The results just take a few weeks to arrive.`,
+source:'Clinical research — REM, growth hormone, and cannabis'},
+
+{id:70,tags:['money','identity'],theme:'💰 Money & Time',cls:'money',
+text:`"I never stayed sober long enough to find out what I could do." He'd worked at a good job for years and always had that private thought running in the background. He knew he was performing well — by most measures, excelling. But he also knew there was a version of himself that wasn't operating at 60% capacity. He finally ran the experiment. The thing that surprised him wasn't the professional improvement, or the clarity, or the energy. It was how much he genuinely liked the version of himself that emerged. He'd been meeting a diminished version of himself every day for years and hadn't realized it.`,
+source:'QuitMarijuana.org — member account'},
+
+{id:71,tags:['anxiety','sleep'],theme:'🧠 Anxiety',cls:'anxiety',
+text:`"I made up my mind to accept the state I was in, and knew it couldn't last forever." An MA member who'd been high for over three decades got through weeks of misery with that one thought. She'd tried stopping before — always replaced weed with alcohol. This time she had no substitute, went to outpatient four nights a week, went to meetings on weekends. Was still pretty miserable for about three weeks. Just kept going. "The misery has an end. The clarity on the other side doesn't." She's been clean for 12 years.`,
+source:'Marijuana Anonymous — detox member stories'},
+
+{id:72,tags:['clarity','identity'],theme:'✨ Mental Clarity',cls:'clarity',
+text:`"Addiction is heavy and demanding. Recovery is light and liberating." That's a quote from an MA member who'd spent years organizing her life around cannabis before finally stopping. She described the shift not as dramatic or sudden, but as gradual lightening — like a pack you've been carrying so long you forgot it was on your back, until you set it down. She started noticing things she hadn't noticed in years: the detail in conversations, her own opinions forming clearly, what she actually wanted to do with an evening. Those small things, she wrote, were everything.`,
+source:'Marijuana Anonymous — member story'},
+
+{id:73,tags:['gym','identity'],theme:'💪 Gym & Gains',cls:'gym',
+text:`"Now for the good part: after stopping for a month I have become superman." That's a direct quote from a QuitMarijuana.org member. Not a metaphor. One month. He described discovering what it felt like to have his actual energy — not chemically sedated evenings, not lethargic mornings, not half-motivated gym sessions. The version of himself that trained hard, thought clearly, and showed up for his own life. That version had been in there the whole time. The habit had just been standing in front of the door.`,
+source:'QuitMarijuana.org — member success story'},
+
+{id:74,tags:['urge','clarity'],theme:'⚡ Urge',cls:'urge',
+text:`The South Park clip that goes viral on r/leaves over and over: Randy Marsh says the downside to marijuana is that it makes you "fine with being bored" instead of acquiring new skills and knowledge. It hits a nerve every time because people recognize it instantly. The tolerance for stasis. The way ambitious people slowly become people who are fine — genuinely, chemically fine — with not doing the ambitious things anymore. That's not relaxation. That's suppression. And the moment you stop, the ambition comes back. It was always still there.`,
+source:'r/leaves — community cultural touchstone'},
+
+{id:75,tags:['identity','money'],theme:'🌱 Identity',cls:'identity',
+text:`"I have a tendency to instead of correcting people and situations in an intellectual way, just pound drugs like marijuana to forget how not correct things are." That was a real person in the Weedless.org survey describing themselves. Not proudly — honestly. He recognized the pattern: something would bother him, he'd get high, it would feel smaller, he'd leave it alone. For a decade. When he quit, he had to start dealing with things that had been accumulating for ten years. It was hard. But dealing with them was the first time he'd felt like an active participant in his own life in years.`,
+source:'Weedless.org — community survey respondent'},
+
+{id:76,tags:['skin','clarity','gym'],theme:'🪞 Skin',cls:'skin',
+text:`The compound effect is real and it's faster than people expect. Better sleep → skin repairs properly at night. No smoke → blood vessels relax, pores clear. Hormones stabilizing → inflammation drops. Less munchies → better nutrition. All four hit simultaneously, pointing the same direction. At 2-4 weeks: people start noticing. At 6-8 weeks: they're getting comments. At 3 months: most describe their physical appearance as the best it's been in years — without a gym program change, without a diet, without a skincare routine. Just without the thing that was working against all of it.`,
+source:'Clinical research — cascading effects of cannabis cessation'},
+
+{id:77,tags:['urge','identity'],theme:'⚡ Urge',cls:'urge',
+text:`"Every day I stay sober gets better, even if I don't think you notice a difference." That's the thing a sponsor told an MA member who was spinning and couldn't feel progress. He didn't believe it. But he stayed clean that day. And the next. And somewhere in there, without noticing a specific moment, it became true. Your brain is physically changing right now — rebuilding receptors, rebalancing chemicals, rewiring reward circuits. Today counts. Even when it doesn't feel like it. Especially when it doesn't feel like it.`,
+source:'Marijuana Anonymous — sponsor wisdom, member story'},
+
+{id:78,tags:['anxiety','identity'],theme:'🧠 Anxiety',cls:'anxiety',
+text:`"Pot helped me not worry about not having a relationship, even though I wanted one. Because of negative feelings about myself, I always thought I didn't deserve to be happy. Instead of dealing with these issues, I would smoke pot and the feelings would go away. They never actually went away." An MA member wrote that in his personal story — not looking for sympathy, just describing what it was. He'd been running from the same fears for years, thinking he was managing them. He wasn't. Now he faces them. And facing them is how they actually leave.`,
+source:'Marijuana Anonymous — member story (The First Step)'},
+
+{id:79,tags:['sleep','identity'],theme:'🌙 Sleep',cls:'sleep',
+text:`"I now feel more emotions. I have more energy for other projects. I spend way more time with the people I love." That's from a person who quit after 33 years of daily use. Thirty-three years. He got 33 years of himself back, starting the day he stopped. He described his evenings now: actually present, actually available, actually there. For the people who needed him and the person he wanted to become. You're getting yours back too. Starting now.`,
+source:'Quora — verified first-person account of 33-year quit'},
+
+{id:80,tags:['gym','sleep','clarity'],theme:'💪 Gym & Gains',cls:'gym',
+text:`Three things happened around the same time, around week five. I woke up one morning without an alarm feeling rested. I had an idea at work and still had it an hour later. And I had a session in the gym where I actually pushed — not because I told myself to, but because I wanted to. None of these things were dramatic. All three had been normal for me in my early twenties before daily smoking. I'd stopped expecting them. When they came back simultaneously, I sat in my car after the gym and just stayed there for a few minutes, recognizing what it felt like to be the person I'd been trying to get back to.`,
+source:'Community experience — documented pattern of concurrent recovery'}
+];
+
+const KEYWORD_MAP={
+  urge:['urge','craving','want','need','about to','tempted','hard','struggling','weak','slip','relapse','can\'t stop','give in'],
+  gym:['gym','workout','training','lift','gains','muscle','performance','fitness','exercise','motivation','lazy','energy','weights','run'],
+  sleep:['sleep','tired','insomnia','wake','rest','exhausted','fatigue','dream','night','nap','drowsy','can\'t sleep'],
+  anxiety:['anxiety','anxious','stressed','stress','paranoia','nervous','panic','worried','fear','overwhelm','edge','calm'],
+  clarity:['clarity','fog','brain','focus','memory','think','concentrate','sharp','clear','mind','forget','confusion'],
+  skin:['skin','acne','face','appearance','complexion','look','mirror','pores','clear'],
+  money:['money','broke','spending','cost','savings','expensive','cash','financial'],
+  identity:['myself','identity','lost','person','feel like','who am i','purpose','goals','life','change','different','better person']
+};
+
+const KEY='momentum_v1';
+let STATE={startDate:null,seen:[],saved:[],hasAsked:false};
+let SESSION={queue:[],qIdx:0,currentId:null,prevScreen:'screen-home'};
+
+/* ── LOAD/SAVE ─────────────────────────────────────────── */
+function load(){try{const r=JSON.parse(localStorage.getItem(KEY));if(r)STATE=Object.assign({startDate:null,seen:[],saved:[],hasAsked:false},r);}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(STATE));}catch(e){}}
+
+/* ── DAYS CLEAN ─────────────────────────────────────────── */
+function getDaysClean(){
+  if(!STATE.startDate)return null;
+  const ms=Date.now()-new Date(STATE.startDate).getTime();
+  return Math.max(0,Math.floor(ms/86400000));
+}
+function updateDayDisplay(){
+  const d=getDaysClean();
+  if(d===null){
+    document.getElementById('day-num').textContent='—';
+    document.getElementById('day-pill').title='Tap to set start date';
+  } else {
+    document.getElementById('day-num').textContent=d;
+  }
+  renderStreak();
+  updateSettings();
+}
+function renderStreak(){
+  const dots=document.getElementById('streak-dots');
+  const note=document.getElementById('streak-note');
+  if(!STATE.startDate){
+    dots.innerHTML='<div style="font-size:13px;color:var(--muted)">Set your start date to see your streak</div>';
+    note.textContent='';return;
+  }
+  const daysClean=getDaysClean();
+  const today=new Date();today.setHours(0,0,0,0);
+  const startDate=new Date(STATE.startDate);startDate.setHours(0,0,0,0);
+
+  // Find Monday of the current week
+  const dow=today.getDay(); // 0=Sun,1=Mon...6=Sat
+  const mondayOffset=dow===0?-6:1-dow;
+  const monday=new Date(today);monday.setDate(today.getDate()+mondayOffset);
+
+  // Day labels Mon–Sun
+  const dayLabels=['M','T','W','T','F','S','S'];
+  const dayNames=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+  let html='';
+  for(let i=0;i<7;i++){
+    const d=new Date(monday);d.setDate(monday.getDate()+i);
+    const isToday=d.getTime()===today.getTime();
+    const isFuture=d>today;
+    const isClean=d>=startDate&&!isFuture;
+    const lbl=dayLabels[i];
+    const name=dayNames[i];
+    if(isToday){
+      html+=`<div class="sdot today" title="${name} – Today">${lbl}</div>`;
+    } else if(isFuture){
+      html+=`<div class="sdot empty" title="${name}">${lbl}</div>`;
+    } else if(isClean){
+      html+=`<div class="sdot done" title="${name} – Clean">✓</div>`;
+    } else {
+      html+=`<div class="sdot" title="${name}" style="background:var(--border);opacity:.4">${lbl}</div>`;
+    }
+  }
+  dots.innerHTML=html;
+  note.textContent=daysClean>0?`${daysClean} day${daysClean!==1?'s':''} clean · Keep building`:'Day 1 starts now';
+}
+
+/* ── SCREENS ─────────────────────────────────────────────── */
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  if(id==='screen-home'){updateDayDisplay();}
+}
+function goBack(){showScreen(SESSION.prevScreen);}
+
+/* ── STORY ENGINE ─────────────────────────────────────────── */
+function getUnseen(pool){
+  const unseen=pool.filter(s=>!STATE.seen.includes(s.id));
+  if(unseen.length===0){STATE.seen=[];save();return pool;}
+  return unseen;
+}
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function startQueue(pool,title){
+  const unseen=getUnseen(pool);
+  SESSION.queue=shuffle(unseen);
+  SESSION.qIdx=0;
+  SESSION.prevScreen=document.querySelector('.screen.on').id;
+  showStory(SESSION.queue[0],title,1,SESSION.queue.length);
+}
+function showStory(s,titleCtx,idx,total){
+  SESSION.currentId=s.id;
+  if(!STATE.seen.includes(s.id)){STATE.seen.push(s.id);save();}
+  document.getElementById('s-tag').textContent=s.theme;
+  document.getElementById('s-tag').className=`theme-tag tt-${s.cls}`;
+  document.getElementById('s-text').innerHTML=s.text;
+  document.getElementById('s-source').textContent=s.source;
+  document.getElementById('story-count').textContent=`${idx} of ${total} stories`;
+  document.getElementById('save-btn').textContent=STATE.saved.includes(s.id)?'❤️':'🔖';
+  showScreen('screen-story');
+}
+function nextStory(){
+  SESSION.qIdx=(SESSION.qIdx+1)%SESSION.queue.length;
+  if(SESSION.qIdx===0){
+    // Refreshed
+    toast('Cycled through all — showing from beginning');
+    STATE.seen=STATE.seen.filter(id=>!SESSION.queue.map(s=>s.id).includes(id));
+    save();
+  }
+  showStory(SESSION.queue[SESSION.qIdx],null,SESSION.qIdx+1,SESSION.queue.length);
+}
+
+function showBoost(){
+  // Prioritize urge stories + recent themes
+  const pool=STORIES.filter(s=>s.tags.includes('urge'));
+  startQueue(pool.length>0?pool:STORIES,'Boost');
+}
+function showRandom(){
+  startQueue(STORIES,'Random');
+}
+function showTheme(tag){
+  const pool=STORIES.filter(s=>s.tags.includes(tag));
+  startQueue(pool,tag);
+}
+function doSearch(){
+  const q=document.getElementById('search-in').value.toLowerCase().trim();
+  if(!q)return;
+  // Score stories by keyword matches
+  const scores={};
+  STORIES.forEach(s=>{scores[s.id]=0;});
+  Object.entries(KEYWORD_MAP).forEach(([tag,kws])=>{
+    if(kws.some(kw=>q.includes(kw)||kw.includes(q.split(' ')[0]))){
+      STORIES.forEach(s=>{if(s.tags.includes(tag))scores[s.id]+=3;});
+    }
+  });
+  // Also match against story text
+  STORIES.forEach(s=>{
+    const words=q.split(/\s+/);
+    words.forEach(w=>{if(w.length>3&&s.text.toLowerCase().includes(w))scores[s.id]+=1;});
+  });
+  const sorted=STORIES.filter(s=>scores[s.id]>0).sort((a,b)=>scores[b.id]-scores[a.id]);
+  const pool=sorted.length>0?sorted:STORIES;
+  startQueue(pool,'Search results');
+  document.getElementById('search-in').blur();
+}
+
+function toggleSave(){
+  const id=SESSION.currentId;
+  if(STATE.saved.includes(id)){
+    STATE.saved=STATE.saved.filter(x=>x!==id);
+    document.getElementById('save-btn').textContent='🔖';
+    toast('Removed from saved');
+  } else {
+    STATE.saved.push(id);
+    document.getElementById('save-btn').textContent='❤️';
+    toast('Story saved ❤️');
+  }
+  save();
+}
+
+/* ── SAVED SCREEN ─────────────────────────────────────────── */
+function renderSaved(){
+  const list=document.getElementById('saved-list');
+  if(!STATE.saved.length){
+    list.innerHTML=`<div class="saved-empty">No saved stories yet.<br>Tap the 🔖 on any story to save it.</div>`;
+    return;
+  }
+  list.innerHTML=STATE.saved.map(id=>{
+    const s=STORIES.find(x=>x.id===id);
+    if(!s)return'';
+    return`<div class="saved-item" onclick="openSaved(${id})">
+      <div class="si-tag">${s.theme.split(' ')[0]}</div>
+      <div class="si-text">${s.text.replace(/<[^>]*>/g,'').substring(0,120)}…</div>
+      <button class="si-del" onclick="event.stopPropagation();deleteSaved(${id})">×</button>
+    </div>`;
+  }).join('');
+}
+function openSaved(id){
+  const s=STORIES.find(x=>x.id===id);
+  if(!s)return;
+  SESSION.queue=[s];SESSION.qIdx=0;
+  SESSION.prevScreen='screen-saved';
+  showStory(s,null,1,1);
+}
+function deleteSaved(id){
+  STATE.saved=STATE.saved.filter(x=>x!==id);
+  save();renderSaved();
+}
+
+/* ── DATE FLOW ─────────────────────────────────────────────── */
+function showDatePrompt(){
+  const today=new Date().toISOString().split('T')[0];
+  document.getElementById('start-date-in').value=today;
+  SESSION.prevScreen='screen-home';
+  showScreen('screen-date');
+}
+function saveStartDate(){
+  const v=document.getElementById('start-date-in').value;
+  if(!v)return;
+  STATE.startDate=v;STATE.hasAsked=true;save();
+  showScreen('screen-home');updateDayDisplay();
+  toast('Start date saved 🌱');
+}
+function skipDate(){STATE.hasAsked=true;save();showScreen('screen-home');}
+function resetDate(){STATE.startDate=null;save();showDatePrompt();}
+
+/* ── SETTINGS ─────────────────────────────────────────────── */
+function updateSettings(){
+  document.getElementById('set-date-val').textContent=STATE.startDate||'Not set';
+  const d=getDaysClean();
+  document.getElementById('set-days-val').textContent=d!==null?d+'':'—';
+  document.getElementById('set-seen-val').textContent=STATE.seen.length+'/'+STORIES.length;
+  document.getElementById('set-saved-val').textContent=STATE.saved.length;
+}
+function resetSeen(){STATE.seen=[];save();toast('All stories reset — fresh start');updateSettings();}
+
+/* ── TOAST ─────────────────────────────────────────────────── */
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.style.opacity='1';
+  clearTimeout(t._t);t._t=setTimeout(()=>t.style.opacity='0',2400);
+}
+
+/* ── HERO ROTATION ─────────────────────────────────────────── */
+const HERO_LINES=[
+  ["You're stronger","than this moment."],
+  ["The urge passes.","It always does."],
+  ["One day at a time.","That's the whole strategy."],
+  ["Your best self","is already in there."],
+  ["Every clean day","compounds."],
+];
+function setHero(){
+  const [a,b]=HERO_LINES[Math.floor(Math.random()*HERO_LINES.length)];
+  document.getElementById('hero-line').innerHTML=`${a}<br><em style="font-style:italic;color:#999">${b}</em>`;
+}
+
+/* ── HOME SCREEN ICON ─────────────────────────────────────── */
+(function(){
+  try{
+    var c=document.createElement('canvas');c.width=c.height=180;
+    var x=c.getContext('2d');
+    x.fillStyle='#080808';x.fillRect(0,0,180,180);
+    x.fillStyle='#5ec46a';x.fillRect(0,148,180,32);
+    x.font='80px serif';x.textAlign='center';x.textBaseline='middle';
+    x.fillText('🌱',90,74);
+    x.fillStyle='#000';x.font='bold 13px -apple-system,Arial';
+    x.textBaseline='middle';x.fillText('MOMENTUM',90,164);
+    var l=document.createElement('link');l.rel='apple-touch-icon';l.href=c.toDataURL();
+    document.head.appendChild(l);
+  }catch(e){}
+})();
+
+/* ── INIT ───────────────────────────────────────────────────── */
+load();
+setHero();
+updateDayDisplay();
+
+// Route saved screen opens
+const savedBtns=document.querySelectorAll('[onclick*="screen-saved"]');
+
+// Hook saved screen rendering
+const origShow=window.showScreen;
+window.showScreen=function(id){
+  if(id==='screen-saved')renderSaved();
+  if(id==='screen-settings')updateSettings();
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  if(id==='screen-home')updateDayDisplay();
+};
+
+// First-time date prompt
+if(!STATE.hasAsked){
+  setTimeout(showDatePrompt,600);
+}
+</script>
+</body>
+</html>
